@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Cadastro de Clientes</h1>
+        <strong>(*) campos obrigatórios</strong>
+        <form>
+          <div class="form-group mt-3">
+            <label for="nome">Nome:</label>
+            <input type="text" class="form-control" id="nome" placeholder="Digite seu nome" required>
+          </div>
+          <div class="form-group">
+            <label for="cpf">CPF:</label>
+            <input type="text" class="form-control" id="cpf" placeholder="Digite seu CPF (apenas dígitos)" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="logradouro">Logradouro:</label>
+              <input type="text" class="form-control" id="logradouro" placeholder="Digite sua Rua, Av, Praça, etc..." required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="numero">Número:</label>
+              <input type="text" class="form-control" id="numero" placeholder="Se não houver, entre com S/N" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="bairro">Bairro:</label>
+              <input type="text" class="form-control" id="bairro" placeholder="Digite seu bairro" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="cidade">Cidade:</label>
+              <input type="text" class="form-control" id="cidade" placeholder="Digite sua cidade" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="estado">Estado:</label>
+              <input type="text" class="form-control" id="estado" placeholder="Digite seu estado" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="cep">CEP:</label>
+              <input type="text" class="form-control" id="cep" placeholder="Digite o CEP" required>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="opcao" id="opcao1" value="opcao1">
+                <label class="form-check-label" for="opcao1">
+                  Cliente Padrão
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="opcao" id="opcao2" value="opcao2">
+                <label class="form-check-label" for="opcao2">
+                  Cliente Especial Classe 1
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="opcao" id="opcao3" value="opcao3">
+                <label class="form-check-label" for="opcao3">
+                  Cliente Especial Classe 2
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6">
+                <strong>* * * ATENÇÃO * * *</strong>
+              <div class="radio-text">Cliente Padrão (Não Especial) o limite do cheque Especial é sempre de R$500,00</div>
+              <div class="radio-text">Cliente Especial Classe 1: o limite do Cheque Especial é de no máximo R$5.000,00</div>
+              <div class="radio-text">Cliente Especial Classe 2: o limite do Cheque Especial é de no máximo R$10.000,00</div>
+            </div>
+          </div>
+          <div class="form-group mt-4">
+            <label for="ultimoCampo">Limite:</label>
+            <input type="text" class="form-control" id="ultimoCampo" placeholder="R$ Digite apenas números e vírgula" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+      </div>
+
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+      <script>
+        
+        document.getElementById("cadastroForm").addEventListener("submit", function(event) {
+            var form = event.target;
+
+            // Verifica se todos os campos estão preenchidos
+            var camposPreenchidos = verificarCamposPreenchidos(form);
+
+            if (!camposPreenchidos) {
+                event.preventDefault(); // Impede o envio do formulário
+                alert("Por favor, preencha todos os campos obrigatórios.");
+            }
+        });
+
+        // Função para verificar se todos os campos estão preenchidos
+        function verificarCamposPreenchidos(form) {
+            var campos = form.querySelectorAll("input[required]");
+            for (var i = 0; i < campos.length; i++) {
+                if (campos[i].value === "") {
+                    return false; // Campo obrigatório não preenchido
+                }
+            }
+            return true; // Todos os campos estão preenchidos
+        }
+
+        document.getElementById("nome").addEventListener("keyup", function(event) {
+            var nomeInput = event.target;
+            var valor = nomeInput.value;
+
+            // Remove caracteres que não são letras
+            valor = valor.replace(/[^a-zA-ZÀ-ÿ ]/g, '');
+
+            // Atualiza o valor do campo
+            nomeInput.value = valor;
+        });
+
+
+        // função para validar o cpf
+        document.getElementById("cpf").addEventListener("input", function(event) {
+            var cpfInput = event.target;
+            var valor = cpfInput.value;
+
+            // Remove todos os caracteres que não são dígitos
+            valor = valor.replace(/\D/g, '');
+
+            // Limita o campo para 11 dígitos
+            valor = valor.slice(0, 11);
+
+            // Verifica se o CPF é válido
+            if (valor.length === 11 && !validarCPF(valor)) {
+                cpfInput.setCustomValidity("CPF inválido");
+            } else {
+                cpfInput.setCustomValidity("");
+            }
+
+            // Atualiza o valor do campo
+            cpfInput.value = valor;
+        });
+
+        // Função para validar o CPF
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
+                return false;
+            }
+            var soma = 0;
+            var resto;
+            for (var i = 1; i <= 9; i++) {
+                soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
+            }
+            resto = (soma * 10) % 11;
+            if ((resto === 10) || (resto === 11)) {
+                resto = 0;
+            }
+            if (resto !== parseInt(cpf.substring(9, 10))) {
+                return false;
+            }
+            soma = 0;
+            for (var i = 1; i <= 10; i++) {
+                soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
+            }
+            resto = (soma * 10) % 11;
+            if ((resto === 10) || (resto === 11)) {
+                resto = 0;
+            }
+            if (resto !== parseInt(cpf.substring(10, 11))) {
+                return false;
+            }
+            return true;
+        }
+
+
+
+        // Função para verificar se o campo "Número" foi preenchido corretamente
+        function verificarNumeroValido() {
+            var numeroInput = document.getElementById("numero");
+            var valor = numeroInput.value.trim();
+
+            // Verifica se o valor é "S/N"
+            if (valor.toUpperCase() === "S/N") {
+                return true;
+            }
+
+            // Verifica se o valor contém apenas números
+            if (/^\d+$/.test(valor)) {
+                return true;
+            }
+
+            return false; // Valor inválido
+        }
+
+        // Função para verificar se o campo "Estado" foi preenchido corretamente
+        function verificarEstadoValido() {
+            var estadoInput = document.getElementById("estado");
+            var valor = estadoInput.value.trim();
+
+            // Verifica se o valor tem exatamente 2 letras
+            if (/^[a-zA-Z]{2}$/.test(valor)) {
+                return true;
+            }
+
+            return false; // Valor inválido
+        }
+
+        // Função para verificar se o campo "CEP" foi preenchido corretamente
+        function verificarCepValido() {
+            var cepInput = document.getElementById("cep");
+            var valor = cepInput.value.trim();
+
+            // Verifica se o valor contém apenas números
+            if (/^\d{8}$/.test(valor)) {
+                return true;
+            }
+
+            return false; // Valor inválido
+        }
+
+        // Função para verificar se o campo "Limite" foi preenchido corretamente
+        function verificarLimiteValido() {
+            var limiteInput = document.getElementById("ultimoCampo");
+            var valor = limiteInput.value.trim();
+
+            // Verifica se o valor contém apenas números e vírgula
+            if (/^[\d,]+$/.test(valor)) {
+                return true;
+            }
+
+            return false; // Valor inválido
+        }
+
+    </script>
+      
+</body>
+</html>
